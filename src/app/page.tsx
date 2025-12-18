@@ -10,6 +10,9 @@ export default function Home() {
         <Link href="/login" className="bg-slate-900 text-white px-6 py-3 rounded-lg hover:bg-slate-800 transition-colors shadow-md">
           Iniciar Sesión
         </Link>
+        <Link href="/register" className="bg-blue-600 text-white px-6 py-3 rounded-lg hover:bg-blue-700 transition-colors shadow-md">
+          Registrarse
+        </Link>
       </div>
     </div>
   );

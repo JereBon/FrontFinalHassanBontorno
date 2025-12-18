@@ -1,17 +1,26 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Frontend E-commerce "Recirculate" (Next.js)
 
-## Getting Started
+Este es el proyecto de frontend para el sistema de E-commerce, construido con Next.js, TypeScript y Tailwind CSS.
 
-First, run the development server:
+---
+
+## 🚀 Inicio Rápido
+
+### Requisitos
+
+- Node.js (v20 o superior)
+- Docker y Docker Compose (para ejecución integrada)
+
+### Opción 1: Ejecución Local (Solo Frontend)
+
+Este modo es útil para trabajar en la interfaz de usuario, pero requiere que el backend esté corriendo por separado en `http://localhost:8000`.
 
 ```bash
+# 1. Instalar dependencias
+npm install
+
+# 2. Iniciar el servidor de desarrollo
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
 Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
