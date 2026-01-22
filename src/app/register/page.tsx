@@ -1,145 +1,149 @@
 'use client';
 
-import { useState, FormEvent } from 'react';
-import { useRouter } from 'next/navigation';
-import { register } from '../../services/authService';
+import { useState } from 'react';
+import { useAuth } from '@/context/AuthContext';
+import Link from 'next/link';
 
 export default function RegisterPage() {
-  const [name, setName] = useState('');
-  const [lastname, setLastname] = useState('');
-  const [email, setEmail] = useState('');
-  const [telephone, setTelephone] = useState('');
-  const [password, setPassword] = useState('');
-  const [error, setError] = useState<string | null>(null);
-  const [success, setSuccess] = useState<string | null>(null);
-  const router = useRouter();
+  const [formData, setFormData] = useState({
+    name: '',
+    lastname: '',
+    email: '',
+    password: '',
+    telephone: ''
+  });
+  const [error, setError] = useState('');
+  const { register, isLoading } = useAuth();
 
-  const handleSubmit = async (e: FormEvent) => {
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setFormData({ ...formData, [e.target.name]: e.target.value });
+  };
+
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    setError(null);
-    setSuccess(null);
-
-    if (password.length < 6) {
-      setError('La contraseña debe tener al menos 6 caracteres.');
-      return;
-    }
-
+    setError('');
     try {
-      await register(name, lastname, email, password, telephone);
-      setSuccess('¡Registro exitoso! Redirigiendo al login...');
-      setTimeout(() => {
-        router.push('/login');
-      }, 2000); // Espera 2 segundos antes de redirigir
+      await register(
+        formData.name,
+        formData.lastname,
+        formData.email,
+        formData.password,
+        formData.telephone
+      );
+      // Redirect handled in context (to login)
     } catch (err: any) {
-      console.error("Error capturado en el registro:", err);
-      let errorMessage = 'Error en el registro. Verifique sus datos e inténtelo de nuevo.';
-      const detail = err.response?.data?.detail;
-
-      if (typeof detail === 'string') {
-        errorMessage = detail;
-      } else if (Array.isArray(detail)) {
-        // Si es un array de errores de validación (FastAPI), extraemos los mensajes
-        errorMessage = detail.map((item: any) => item.msg || JSON.stringify(item)).join(', ');
-      } else if (typeof detail === 'object' && detail !== null) {
-        errorMessage = JSON.stringify(detail);
-      } else if (err.message) {
-        errorMessage = err.message;
-      }
-
-      if (errorMessage.includes('already exists')) {
-        setError('El correo electrónico ya está registrado.');
-      } else {
-        setError(errorMessage);
-      }
+      console.error(err);
+      setError('Error al registrarse. Verifica tus datos o intenta más tarde.');
     }
   };
 
   return (
-    <div className="flex items-center justify-center min-h-screen bg-gray-100">
-      <div className="w-full max-w-md p-8 space-y-6 bg-white rounded-lg shadow-md">
-        <h2 className="text-2xl font-bold text-center text-gray-900">Crear una cuenta</h2>
-        <form className="space-y-6" onSubmit={handleSubmit}>
-          <div>
-            <label htmlFor="name" className="block text-sm font-medium text-gray-700">
-              Nombre
-            </label>
-            <input
-              id="name"
-              name="name"
-              type="text"
-              required
-              value={name}
-              onChange={(e) => setName(e.target.value)}
-              className="w-full px-3 py-2 mt-1 text-gray-900 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
-            />
+    <div className="min-h-[80vh] flex items-center justify-center bg-white px-4 py-12">
+      <div className="w-full max-w-md space-y-8">
+        <div className="text-center">
+          <h2 className="mt-6 text-3xl font-bold tracking-tight text-gray-900 uppercase">
+            Crear Cuenta
+          </h2>
+          <p className="mt-2 text-sm text-gray-600">
+            Únete a la comunidad Recirculate
+          </p>
+        </div>
+
+        <form className="mt-8 space-y-6" onSubmit={handleSubmit}>
+          <div className="space-y-4 shadow-sm">
+            <div className="grid grid-cols-2 gap-4">
+              <div>
+                <label htmlFor="name" className="sr-only">Nombre</label>
+                <input
+                  id="name"
+                  name="name"
+                  type="text"
+                  required
+                  className="relative block w-full rounded-none border border-gray-300 px-3 py-3 text-gray-900 placeholder-gray-500 focus:z-10 focus:border-black focus:outline-none focus:ring-black sm:text-sm"
+                  placeholder="Nombre"
+                  value={formData.name}
+                  onChange={handleChange}
+                />
+              </div>
+              <div>
+                <label htmlFor="lastname" className="sr-only">Apellido</label>
+                <input
+                  id="lastname"
+                  name="lastname"
+                  type="text"
+                  required
+                  className="relative block w-full rounded-none border border-gray-300 px-3 py-3 text-gray-900 placeholder-gray-500 focus:z-10 focus:border-black focus:outline-none focus:ring-black sm:text-sm"
+                  placeholder="Apellido"
+                  value={formData.lastname}
+                  onChange={handleChange}
+                />
+              </div>
+            </div>
+
+            <div>
+              <label htmlFor="email" className="sr-only">Email</label>
+              <input
+                id="email"
+                name="email"
+                type="email"
+                autoComplete="email"
+                required
+                className="relative block w-full rounded-none border border-gray-300 px-3 py-3 text-gray-900 placeholder-gray-500 focus:z-10 focus:border-black focus:outline-none focus:ring-black sm:text-sm"
+                placeholder="Correo Electrónico"
+                value={formData.email}
+                onChange={handleChange}
+              />
+            </div>
+
+            <div>
+              <label htmlFor="telephone" className="sr-only">Teléfono</label>
+              <input
+                id="telephone"
+                name="telephone"
+                type="tel"
+                required
+                className="relative block w-full rounded-none border border-gray-300 px-3 py-3 text-gray-900 placeholder-gray-500 focus:z-10 focus:border-black focus:outline-none focus:ring-black sm:text-sm"
+                placeholder="Teléfono"
+                value={formData.telephone}
+                onChange={handleChange}
+              />
+            </div>
+
+            <div>
+              <label htmlFor="password" className="sr-only">Contraseña</label>
+              <input
+                id="password"
+                name="password"
+                type="password"
+                required
+                className="relative block w-full rounded-none border border-gray-300 px-3 py-3 text-gray-900 placeholder-gray-500 focus:z-10 focus:border-black focus:outline-none focus:ring-black sm:text-sm"
+                placeholder="Contraseña (min. 6 caracteres)"
+                value={formData.password}
+                onChange={handleChange}
+              />
+            </div>
           </div>
-          <div>
-            <label htmlFor="lastname" className="block text-sm font-medium text-gray-700">
-              Apellido
-            </label>
-            <input
-              id="lastname"
-              name="lastname"
-              type="text"
-              required
-              value={lastname}
-              onChange={(e) => setLastname(e.target.value)}
-              className="w-full px-3 py-2 mt-1 text-gray-900 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
-            />
-          </div>
-          <div>
-            <label htmlFor="email" className="block text-sm font-medium text-gray-700">
-              Correo electrónico
-            </label>
-            <input
-              id="email"
-              name="email"
-              type="email"
-              autoComplete="email"
-              required
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              className="w-full px-3 py-2 mt-1 text-gray-900 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
-            />
-          </div>
-          <div>
-            <label htmlFor="telephone" className="block text-sm font-medium text-gray-700">
-              Teléfono
-            </label>
-            <input
-              id="telephone"
-              name="telephone"
-              type="tel"
-              required
-              value={telephone}
-              onChange={(e) => setTelephone(e.target.value)}
-              className="w-full px-3 py-2 mt-1 text-gray-900 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
-            />
-          </div>
-          <div>
-            <label htmlFor="password" className="block text-sm font-medium text-gray-700">
-              Contraseña
-            </label>
-            <input
-              id="password"
-              name="password"
-              type="password"
-              autoComplete="new-password"
-              required
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              className="w-full px-3 py-2 mt-1 text-gray-900 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
-            />
-          </div>
-          {error && <p className="text-sm text-red-600">{error}</p>}
-          {success && <p className="text-sm text-green-600">{success}</p>}
+
+          {error && (
+            <div className="text-red-500 text-sm text-center">
+              {error}
+            </div>
+          )}
+
           <div>
             <button
               type="submit"
-              className="w-full px-4 py-2 font-medium text-white bg-indigo-600 rounded-md hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+              disabled={isLoading}
+              className="group relative flex w-full justify-center bg-black px-4 py-3 text-sm font-semibold text-white hover:bg-gray-800 focus:outline-none focus:ring-2 focus:ring-black focus:ring-offset-2 uppercase tracking-widest disabled:opacity-50 transition-colors"
             >
-              Registrarse
+              {isLoading ? 'Registrando...' : 'Registrarse'}
             </button>
+          </div>
+
+          <div className="text-center text-sm">
+            <Link href="/login" className="font-medium text-gray-600 hover:text-black underline">
+              ¿Ya tienes cuenta? Ingresa
+            </Link>
           </div>
         </form>
       </div>

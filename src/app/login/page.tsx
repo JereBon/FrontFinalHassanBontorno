@@ -1,80 +1,90 @@
 'use client';
 
 import { useState } from 'react';
-import { useRouter } from 'next/navigation';
-import { login } from '../../services/authService';
+import { useAuth } from '@/context/AuthContext';
+import Link from 'next/link';
 
 export default function LoginPage() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
-  const [isLoading, setIsLoading] = useState(false);
-  const router = useRouter();
+  const { login, isLoading } = useAuth();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setError('');
-    setIsLoading(true);
-
     try {
-      const data = await login(email, password);
-      console.log('Login exitoso:', data);
-      
-      // Aquí guardaremos el token más adelante (localStorage o Cookies)
-      localStorage.setItem('token', data.token);
-      
-      // Redirigir al home o dashboard
-      router.push('/');
-    } catch (err: any) {
-      console.error('Error en login:', err);
-      setError('Credenciales inválidas o error en el servidor.');
-      setIsLoading(false);
+      await login(email, password);
+    } catch (err) {
+      setError('Credenciales inválidas. Por favor intenta nuevamente.');
     }
   };
 
   return (
-    <div className="flex min-h-screen items-center justify-center bg-gray-100">
-      <div className="w-full max-w-md bg-white p-8 rounded-lg shadow-md">
-        <h2 className="text-2xl font-bold text-center mb-6 text-slate-800">Iniciar Sesión</h2>
-        
-        {error && (
-          <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mb-4">
-            {error}
-          </div>
-        )}
+    <div className="min-h-[80vh] flex items-center justify-center bg-white px-4">
+      <div className="w-full max-w-md space-y-8">
+        <div className="text-center">
+          <h2 className="mt-6 text-3xl font-bold tracking-tight text-gray-900 uppercase">
+            Iniciar Sesión
+          </h2>
+          <p className="mt-2 text-sm text-gray-600">
+            Bienvenido de nuevo a Recirculate
+          </p>
+        </div>
 
-        <form onSubmit={handleSubmit} className="space-y-4">
-          <div>
-            <label className="block text-sm font-medium text-gray-700">Email</label>
-            <input
-              type="email"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-slate-500 focus:border-slate-500 text-black"
-              required
-              disabled={isLoading}
-            />
+        <form className="mt-8 space-y-6" onSubmit={handleSubmit}>
+          <div className="space-y-4 rounded-md shadow-sm">
+            <div>
+              <label htmlFor="email-address" className="sr-only">Email</label>
+              <input
+                id="email-address"
+                name="email"
+                type="email"
+                autoComplete="email"
+                required
+                className="relative block w-full rounded-none border border-gray-300 px-3 py-3 text-gray-900 placeholder-gray-500 focus:z-10 focus:border-black focus:outline-none focus:ring-black sm:text-sm"
+                placeholder="Correo Electrónico"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+              />
+            </div>
+            <div>
+              <label htmlFor="password" className="sr-only">Contraseña</label>
+              <input
+                id="password"
+                name="password"
+                type="password"
+                autoComplete="current-password"
+                required
+                className="relative block w-full rounded-none border border-gray-300 px-3 py-3 text-gray-900 placeholder-gray-500 focus:z-10 focus:border-black focus:outline-none focus:ring-black sm:text-sm"
+                placeholder="Contraseña"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+              />
+            </div>
           </div>
+
+          {error && (
+            <div className="text-red-500 text-sm text-center">
+              {error}
+            </div>
+          )}
+
           <div>
-            <label className="block text-sm font-medium text-gray-700">Contraseña</label>
-            <input
-              type="password"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-slate-500 focus:border-slate-500 text-black"
-              required
+            <button
+              type="submit"
               disabled={isLoading}
-            />
+              className="group relative flex w-full justify-center bg-black px-4 py-3 text-sm font-semibold text-white hover:bg-gray-800 focus:outline-none focus:ring-2 focus:ring-black focus:ring-offset-2 uppercase tracking-widest disabled:opacity-50 transition-colors"
+            >
+              {isLoading ? 'Cargando...' : 'Ingresar'}
+            </button>
           </div>
-          <button
-            type="submit"
-            disabled={isLoading}
-            className={`w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white ${
-              isLoading ? 'bg-slate-400 cursor-not-allowed' : 'bg-slate-900 hover:bg-slate-800'
-            } focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-slate-500`}
-          >
-            {isLoading ? 'Ingresando...' : 'Ingresar'}
-          </button>
+
+          <div className="text-center text-sm">
+            <Link href="/register" className="font-medium text-gray-600 hover:text-black underline">
+              ¿No tienes cuenta? Regístrate
+            </Link>
+          </div>
         </form>
       </div>
     </div>
