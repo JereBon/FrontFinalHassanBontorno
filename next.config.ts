@@ -2,36 +2,57 @@ import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
   async rewrites() {
+    const backendUrl = process.env.BACKEND_URL || 'http://localhost:8000';
     return [
       // Reglas específicas para forzar la barra final y evitar el error 307
       {
         source: '/api/clients/',
-        destination: 'http://backend:8000/clients/',
+        destination: `${backendUrl}/clients/`,
       },
       {
         source: '/api/clients',
-        destination: 'http://backend:8000/clients/',
+        destination: `${backendUrl}/clients/`,
       },
       {
         source: '/api/products/',
-        destination: 'http://backend:8000/products/',
+        destination: `${backendUrl}/products/`,
       },
       {
         source: '/api/products',
-        destination: 'http://backend:8000/products/',
+        destination: `${backendUrl}/products/`,
       },
       {
         source: '/api/health_check/',
-        destination: 'http://backend:8000/health_check/',
+        destination: `${backendUrl}/health_check/`,
       },
       {
         source: '/api/health_check',
-        destination: 'http://backend:8000/health_check/',
+        destination: `${backendUrl}/health_check/`,
       },
-      // Regla general para el resto de endpoints (ej: /api/auth/login)
+      {
+        source: '/api/orders/',
+        destination: `${backendUrl}/orders/`,
+      },
+      {
+        source: '/api/orders',
+        destination: `${backendUrl}/orders/`,
+      },
+      {
+        source: '/api/categories/',
+        destination: `${backendUrl}/categories/`,
+      },
+      {
+        source: '/api/categories',
+        destination: `${backendUrl}/categories/`,
+      },
+      {
+        source: '/api/auth/:path*',
+        destination: `${backendUrl}/auth/:path*`,
+      },
+      // Regla general para el resto de endpoints
       {
         source: '/api/:path*',
-        destination: 'http://backend:8000/:path*', // Usamos el nombre del servicio de Docker
+        destination: `${backendUrl}/:path*`, 
       },
     ];
   },
