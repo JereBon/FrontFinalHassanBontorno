@@ -3,6 +3,7 @@
 import React, { createContext, useState, useContext, useEffect, ReactNode } from 'react';
 import { useRouter } from 'next/navigation';
 import { login as loginService, register as registerService } from '../services/authService';
+import { getClientByEmail } from '../services/clientService';
 import { User, LoginResponse, Client } from '../types';
 
 interface AuthContextType {
@@ -45,11 +46,21 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
         setIsLoading(true);
         try {
             const data: LoginResponse = await loginService(email, password);
-            // Backend returns { token, user }
+            // Fetch full client details to get ID
+            let userToStore = data.user;
+            try {
+                const fullClient = await getClientByEmail(email);
+                if (fullClient) {
+                    userToStore = { ...data.user, id_key: fullClient.id_key };
+                }
+            } catch (clientErr) {
+                console.error("Failed to fetch client details", clientErr);
+            }
+
             setToken(data.token);
-            setUser(data.user);
+            setUser(userToStore);
             localStorage.setItem('token', data.token);
-            localStorage.setItem('user', JSON.stringify(data.user));
+            localStorage.setItem('user', JSON.stringify(userToStore));
             router.push('/'); // Redirect to home on success
         } catch (error) {
             console.error("Login failed", error);
