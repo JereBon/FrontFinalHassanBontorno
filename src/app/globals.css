@@ -1,26 +1,96 @@
 @import "tailwindcss";
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
-}
-
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
+@theme {
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+:root {
+  --background: #f3f4f6;
+  /* Soft Gray (Reverted as requested) */
+  /* Soft Mint/Lime Tint to match aesthetic */
+  --foreground: #111827;
+  --primary: #d4f238;
+  /* Lime Green Neon */
+  --primary-foreground: #111827;
+  --card: #ffffff;
+  --card-foreground: #111827;
+  --border: #e5e7eb;
+  --input: #e5e7eb;
+  --ring: #d4f238;
+  --radius: 1.5rem;
+  /* rounded-3xl equivalent */
+  /* rounded-3xl equivalent */
+  --shadow-soft: 0 10px 40px -10px rgba(0, 0, 0, 0.05);
 }
+
+.dark {
+  --background: #111827;
+  /* Gray 900 */
+  --foreground: #f9fafb;
+  /* Gray 50 */
+  --card: #1f2937;
+  /* Gray 800 */
+  --card-foreground: #f9fafb;
+  --border: #A4BFB0;
+  /* Mint/Sage Green for Borders in Dark Mode */
+  --input: #A4BFB0;
+  /* Mint/Sage Green for Inputs in Dark Mode */
+  --shadow-soft: 0 10px 40px -10px rgba(0, 0, 0, 0.5);
+  /* Stronger shadow for dark mode */
+}
+
+
 
 body {
   background: var(--background);
   color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: var(--font-sans), system-ui, sans-serif;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* Custom Soft UI Utilities */
+.soft-card {
+  background-color: var(--card);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow-soft);
+  border: 1px solid var(--border);
+}
+
+.btn-primary {
+  background-color: var(--primary);
+  color: var(--primary-foreground);
+  border-radius: 9999px;
+  font-weight: 600;
+  transition: all 0.2s ease;
+  padding: 0.75rem 1.5rem;
+}
+
+.btn-primary:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 10px 25px -5px rgba(212, 242, 56, 0.4);
+}
+
+/* Navbar Button Utilities */
+.navbar-btn {
+  background-color: var(--card);
+  /* Same as background - invisible/integrated */
+  color: var(--foreground);
+  transition: all 0.2s ease;
+}
+
+.navbar-btn:hover {
+  background-color: var(--primary);
+  color: var(--primary-foreground);
+}
+
+.navbar-avatar-bg {
+  background-color: var(--card);
+  /* Same as cards */
+  color: var(--foreground);
+}
+
+/* Auto Text Color - responds to theme */
+.auto-text {
+  color: var(--foreground);
 }

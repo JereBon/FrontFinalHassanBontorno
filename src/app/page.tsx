@@ -1,23 +1,23 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import Link from 'next/link';
-import { getProducts } from '../services/productService';
-import { Product } from '../types';
 import ProductCard from '../components/ProductCard';
+import { Product } from '../types';
+import { getProducts } from '../services/productService';
+import Link from 'next/link';
 
 export default function Home() {
-  const [products, setProducts] = useState<Product[]>([]);
+  const [featuredProducts, setFeaturedProducts] = useState<Product[]>([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const fetchProducts = async () => {
       try {
         const data = await getProducts();
-        // Show only first 4 products for "Featured" section
-        setProducts(data.slice(0, 4));
+        // Tomamos los primeros 6 para el grid
+        setFeaturedProducts(data.slice(0, 6));
       } catch (error) {
-        console.error("Failed to fetch products", error);
+        console.error('Error fetching products:', error);
       } finally {
         setLoading(false);
       }
@@ -27,78 +27,134 @@ export default function Home() {
   }, []);
 
   return (
-    <div className="bg-white">
-      {/* Hero Section */}
-      <section className="relative h-[80vh] bg-gray-50 flex items-center justify-center overflow-hidden">
-        <div className="absolute inset-0 bg-gray-200/50">
-          {/* Abstract minimalist background or image could go here */}
-          <img
-            src="https://images.unsplash.com/photo-1490481651871-ab68de25d43d?ixlib=rb-4.0.3&auto=format&fit=crop&w=2070&q=80"
-            alt="Hero Background"
-            className="w-full h-full object-cover opacity-80 grayscale"
-          />
-        </div>
-        <div className="relative z-10 text-center px-4 max-w-3xl">
-          <h1 className="text-4xl md:text-6xl font-bold tracking-tighter text-white uppercase mb-6 drop-shadow-md">
-            Menos es Más
-          </h1>
-          <p className="text-lg md:text-xl text-white mb-8 tracking-wide font-light drop-shadow-sm">
-            Descubre nuestra colección de básicos esenciales diseñados para perdurar.
-          </p>
-          <Link
-            href="/shop"
-            className="inline-block bg-white text-black px-8 py-4 text-sm font-bold uppercase tracking-widest hover:bg-black hover:text-white transition-colors duration-300"
-          >
-            Ver Colección
-          </Link>
-        </div>
-      </section>
+    <div className="min-h-screen pt-24 pb-12">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
 
-      {/* Featured Products */}
-      <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-24">
-        <div className="flex justify-between items-end mb-12">
-          <h2 className="text-2xl font-bold uppercase tracking-tight text-gray-900">Nuevas Llegadas</h2>
-          <Link href="/shop" className="text-sm border-b border-black pb-1 hover:text-gray-600 hover:border-gray-600 transition-colors uppercase tracking-wide">
-            Ver todo
-          </Link>
+        {/* BENTO GRID HEADER */}
+
+
+        {/* BENTO GRID MAIN LAYOUT */}
+        <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
+
+          {/* LARGE HERO CARD - 2x2 */}
+          <div className="col-span-1 md:col-span-3 soft-card p-8 md:p-12 relative overflow-hidden group">
+            <div className="relative z-10 max-w-lg">
+              <div className="inline-block bg-gray-100 rounded-full px-4 py-1.5 mb-6 text-xs font-bold text-gray-500 uppercase tracking-wide">
+                Nueva Colección 2025
+              </div>
+              <h1 className="text-4xl md:text-6xl font-bold auto-text tracking-tight leading-none mb-4">
+                Minimalismo <br /> <span className="text-gray-400 dark:text-gray-500">Atemporal.</span>
+              </h1>
+              <p className="text-gray-500 dark:text-gray-400 mb-8 max-w-sm">
+                Descubre prendas diseñadas para destacar sin hacer ruido. Calidad premium y cortes modernos.
+              </p>
+              <Link href="/shop" className="btn-primary inline-flex items-center gap-2">
+                Ver Todo
+                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 8l4 4m0 0l-4 4m4-4H3" /></svg>
+              </Link>
+            </div>
+            {/* Abstract decorative elements */}
+            <div className="absolute right-0 top-1/2 -translate-y-1/2 w-1/2 h-full opacity-100 hidden md:block aspect-[4/3]">
+              <img src="https://images.unsplash.com/photo-1483985988355-763728e1935b?ixlib=rb-4.0.3&auto=format&fit=crop&w=1770&q=80" className="w-full h-full object-cover rounded-l-3xl" alt="Hero Fashion" />
+            </div>
+          </div>
+
+          {/* SIDE COLUMN */}
+          <div className="col-span-1 space-y-6">
+
+            {/* Categories Card */}
+            <div className="soft-card p-6 flex flex-col">
+              <h3 className="text-lg font-bold mb-5 auto-text">Categorías</h3>
+
+              {/* Vertical Category Stack */}
+              <div className="space-y-3">
+                {/* Prendas Superiores */}
+                <Link href="/shop?category=1" className="block relative overflow-hidden rounded-2xl group transition-transform hover:scale-105 duration-300">
+                  <div className="aspect-[4/2] relative">
+                    <img
+                      src="https://images.unsplash.com/photo-1521572163474-6864f9cf17ab?auto=format&fit=crop&w=800&q=80"
+                      alt="Superiores"
+                      className="w-full h-full object-cover"
+                    />
+                    <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent"></div>
+                    <div className="absolute bottom-3 left-3 right-3">
+                      <p className="text-white font-bold text-sm">Superiores</p>
+                    </div>
+                  </div>
+                </Link>
+
+                {/* Prendas Inferiores */}
+                <Link href="/shop?category=2" className="block relative overflow-hidden rounded-2xl group transition-transform hover:scale-105 duration-300">
+                  <div className="aspect-[4/2] relative">
+                    <img
+                      src="https://images.unsplash.com/photo-1542272604-787c3835535d?auto=format&fit=crop&w=800&q=80"
+                      alt="Inferiores"
+                      className="w-full h-full object-cover"
+                    />
+                    <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent"></div>
+                    <div className="absolute bottom-3 left-3 right-3">
+                      <p className="text-white font-bold text-sm">Inferiores</p>
+                    </div>
+                  </div>
+                </Link>
+
+                {/* Abrigos */}
+                <Link href="/shop?category=3" className="block relative overflow-hidden rounded-2xl group transition-transform hover:scale-105 duration-300">
+                  <div className="aspect-[4/2] relative">
+                    <img
+                      src="https://images.unsplash.com/photo-1591047139829-d91aecb6caea?auto=format&fit=crop&w=800&q=80"
+                      alt="Abrigos"
+                      className="w-full h-full object-cover"
+                    />
+                    <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent"></div>
+                    <div className="absolute bottom-3 left-3 right-3">
+                      <p className="text-white font-bold text-sm">Abrigos</p>
+                    </div>
+                  </div>
+                </Link>
+              </div>
+
+              {/* Ver Todas Button */}
+              <Link href="/shop" className="block navbar-btn p-3 rounded-xl flex justify-between items-center group mt-3">
+                <span className="text-sm font-medium group-hover:text-black">Ver Todas</span>
+                <span className="p-1 rounded-full">
+                  <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" /></svg>
+                </span>
+              </Link>
+            </div>
+
+          </div>
+        </div>
+
+        {/* SECOND ROW - PRODUCTS */}
+        <div className="mb-4">
+          <h2 className="text-2xl font-bold mb-6 flex items-center gap-3 auto-text">
+            Artículos Destacados
+            <span className="text-xs bg-gray-100 text-gray-500 px-4 py-1.5 rounded-full font-bold uppercase tracking-wide">Nuevos Ingresos</span>
+          </h2>
         </div>
 
         {loading ? (
-          <div className="grid grid-cols-1 gap-y-10 gap-x-6 sm:grid-cols-2 lg:grid-cols-4 xl:gap-x-8">
-            {[1, 2, 3, 4].map((i) => (
-              <div key={i} className="animate-pulse">
-                <div className="bg-gray-200 aspect-square w-full mb-4"></div>
-                <div className="h-4 bg-gray-200 w-3/4 mb-2"></div>
-                <div className="h-4 bg-gray-200 w-1/4"></div>
-              </div>
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
+            {[1, 2, 3, 4].map(i => (
+              <div key={i} className="animate-pulse bg-gray-200 dark:bg-gray-800 rounded-3xl h-80"></div>
             ))}
           </div>
         ) : (
-          <div className="grid grid-cols-1 gap-y-10 gap-x-6 sm:grid-cols-2 lg:grid-cols-4 xl:gap-x-8">
-            {products.map((product) => (
-              <ProductCard key={product.id_key} product={product} />
-            ))}
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
+            {featuredProducts.length > 0 ? (
+              featuredProducts.map((product) => (
+                <ProductCard key={product.id_key} product={product} />
+              ))
+            ) : (
+              <div className="col-span-full py-12 text-center text-gray-500">
+                No hay productos destacados por el momento.
+              </div>
+            )}
           </div>
         )}
-      </section>
 
-      {/* Values Section */}
-      <section className="bg-black text-white py-24">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 grid grid-cols-1 md:grid-cols-3 gap-12 text-center">
-          <div>
-            <h3 className="text-lg font-bold uppercase mb-4 tracking-wider">Calidad Premium</h3>
-            <p className="text-gray-400 text-sm">Materiales seleccionados meticulosamente para garantizar durabilidad y confort.</p>
-          </div>
-          <div>
-            <h3 className="text-lg font-bold uppercase mb-4 tracking-wider">Diseño Atemporal</h3>
-            <p className="text-gray-400 text-sm">Prendas que trascienden las tendencias pasajeras y se mantienen vigentes.</p>
-          </div>
-          <div>
-            <h3 className="text-lg font-bold uppercase mb-4 tracking-wider">Producción Ética</h3>
-            <p className="text-gray-400 text-sm">Procesos de fabricación responsables con el medio ambiente y las personas.</p>
-          </div>
-        </div>
-      </section>
+      </div>
     </div>
   );
 }
