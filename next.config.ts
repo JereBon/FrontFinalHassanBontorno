@@ -52,7 +52,7 @@ const nextConfig: NextConfig = {
       // Regla general para el resto de endpoints
       {
         source: '/api/:path*',
-        destination: `${backendUrl}/:path*`, 
+        destination: `${backendUrl}/:path*`,
       },
     ];
   },

@@ -94,8 +94,10 @@ export default function CheckoutPage() {
             router.push('/profile');
 
         } catch (err: any) {
-            console.error(err);
-            setError(err.message || 'Error al procesar la compra.');
+            console.error("Checkout Error Full:", err);
+            // Try to extract backend error message if available
+            const msg = err.response?.data?.detail || err.response?.data?.message || err.message || 'Error al procesar la compra.';
+            setError(msg);
         } finally {
             setLoading(false);
         }

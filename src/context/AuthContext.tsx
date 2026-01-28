@@ -3,8 +3,7 @@
 import React, { createContext, useState, useContext, useEffect, ReactNode } from 'react';
 import { useRouter } from 'next/navigation';
 import { login as loginService, register as registerService } from '../services/authService';
-import { getClientByEmail } from '../services/clientService';
-import { User, LoginResponse, Client } from '../types';
+import { User, LoginResponse } from '../types';
 
 interface AuthContextType {
     user: User | null;
@@ -46,22 +45,12 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
         setIsLoading(true);
         try {
             const data: LoginResponse = await loginService(email, password);
-            // Fetch full client details to get ID
-            let userToStore = data.user;
-            try {
-                const fullClient = await getClientByEmail(email);
-                if (fullClient) {
-                    userToStore = { ...data.user, id_key: fullClient.id_key };
-                }
-            } catch (clientErr) {
-                console.error("Failed to fetch client details", clientErr);
-            }
-
+            // Backend now returns ID in data.user, so we just store it directly.
             setToken(data.token);
-            setUser(userToStore);
+            setUser(data.user);
             localStorage.setItem('token', data.token);
-            localStorage.setItem('user', JSON.stringify(userToStore));
-            router.push('/'); // Redirect to home on success
+            localStorage.setItem('user', JSON.stringify(data.user));
+            router.push('/');
         } catch (error) {
             console.error("Login failed", error);
             throw error;
@@ -74,7 +63,6 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
         setIsLoading(true);
         try {
             await registerService(name, lastname, email, password, telephone);
-            // Registration successful. Backend does NOT return token. Redirect to login.
             router.push('/login');
         } catch (error) {
             console.error("Registration failed", error);
