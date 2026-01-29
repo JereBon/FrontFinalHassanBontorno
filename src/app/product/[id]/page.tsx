@@ -6,6 +6,7 @@ import { getProductById, getPlaceholderImage } from '../../../services/productSe
 import { Product } from '../../../types';
 import { useCart } from '../../../context/CartContext';
 import Link from 'next/link';
+import ReviewsSection from '../../../components/ReviewsSection';
 
 export default function ProductDetailPage() {
     const params = useParams();
@@ -46,10 +47,10 @@ export default function ProductDetailPage() {
     const imageSrc = getPlaceholderImage(product.category_id, product.id_key);
 
     return (
-        <div className="bg-[#f3f4f6] min-h-screen flex items-center pt-24 pb-12">
+        <div className="min-h-screen flex items-center pt-24 pb-12">
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full">
-                <div className="soft-card bg-white p-8 md:p-12">
-                    <Link href="/shop" className="inline-flex items-center text-sm text-gray-500 hover:text-black mb-8 transition-colors">
+                <div className="soft-card p-8 md:p-12">
+                    <Link href="/shop" className="inline-flex items-center text-sm text-gray-500 hover:text-gray-900 dark:hover:text-white mb-8 transition-colors">
                         <svg className="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 19l-7-7m0 0l7-7m-7 7h18" /></svg>
                         Volver a la tienda
                     </Link>
@@ -63,14 +64,14 @@ export default function ProductDetailPage() {
                         {/* details */}
                         <div className="flex flex-col space-y-8">
                             <div>
-                                <p className="text-sm text-gray-500 uppercase tracking-wide mb-2">
+                                <p className="text-sm text-gray-500 dark:text-gray-400 uppercase tracking-wide mb-2">
                                     {product.category?.name || 'Colección'}
                                 </p>
-                                <h1 className="text-4xl font-bold uppercase tracking-tight text-gray-900 mb-4">{product.name}</h1>
-                                <p className="text-2xl font-medium text-gray-900">${product.price.toFixed(2)}</p>
+                                <h1 className="text-4xl font-bold uppercase tracking-tight auto-text mb-4">{product.name}</h1>
+                                <p className="text-2xl font-medium auto-text">${product.price.toFixed(2)}</p>
                             </div>
 
-                            <div className="prose prose-sm text-gray-500">
+                            <div className="prose prose-sm text-gray-500 dark:text-gray-400">
                                 <p>
                                     Este producto ha sido confeccionado con los más altos estándares de calidad.
                                     Diseñado para ofrecer comodidad y estilo en una pieza atemporal que perdurará en tu guardarropa.
@@ -100,7 +101,11 @@ export default function ProductDetailPage() {
                                 <p className="text-xs text-gray-400 mt-4 text-center">Stock disponible: {product.stock} unidades</p>
                             </div>
                         </div>
+
                     </div>
+
+                    {/* Reviews Section */}
+                    {product && <ReviewsSection productId={product.id_key} />}
                 </div>
             </div>
         </div>

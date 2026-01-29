@@ -17,7 +17,7 @@ export default function Navbar() {
         {/* Logo */}
         <div className="flex-shrink-0 flex items-center">
           <Link href="/" className="flex items-center gap-2">
-            <div className="w-8 h-8 bg-black dark:bg-white rounded-lg flex items-center justify-center text-white dark:text-black font-bold text-lg">
+            <div className="w-8 h-8 bg-[#d4f238] rounded-lg flex items-center justify-center text-black font-bold text-lg">
               R.
             </div>
             <span className="text-xl font-bold tracking-tight auto-text">Recirculate</span>

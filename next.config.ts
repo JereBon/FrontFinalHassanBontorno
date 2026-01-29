@@ -62,6 +62,14 @@ const nextConfig: NextConfig = {
         destination: `${backendUrl}/bills/`,
       },
       {
+        source: '/api/reviews/',
+        destination: `${backendUrl}/reviews/`,
+      },
+      {
+        source: '/api/reviews',
+        destination: `${backendUrl}/reviews/`,
+      },
+      {
         source: '/api/order_details/',
         destination: `${backendUrl}/order_details/`,
       },

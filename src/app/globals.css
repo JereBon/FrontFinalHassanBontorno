@@ -94,3 +94,32 @@ body {
 .auto-text {
   color: var(--foreground);
 }
+
+/* Explicit Theme Elements (Bypassing Tailwind v4 media-strategy) */
+.theme-input {
+  background-color: #ffffff;
+  color: #111827;
+  border: 1px solid #d1d5db; /* gray-300 */
+}
+.dark .theme-input {
+  background-color: #1f2937; /* gray-800 */
+  color: #ffffff;
+  border: 1px solid #374151; /* gray-700 */
+}
+
+.theme-btn-cancel {
+  background-color: #f3f4f6; /* gray-100 */
+  color: #111827;
+  border: 1px solid #e5e7eb;
+}
+.dark .theme-btn-cancel {
+  background-color: #1f2937; /* gray-800 */
+  color: #d1d5db; /* gray-300 */
+  border: 1px solid #374151; /* gray-700 */
+}
+.theme-btn-cancel:hover {
+  background-color: #e5e7eb; /* gray-200 */
+}
+.dark .theme-btn-cancel:hover {
+  background-color: #374151; /* gray-700 */
+}

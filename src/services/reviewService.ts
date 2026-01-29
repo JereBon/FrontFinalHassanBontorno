@@ -13,13 +13,15 @@ interface CreateReviewPayload {
 interface UpdateReviewPayload {
     rating?: number;
     comment?: string;
+    product_id?: number;
+    client_id?: number;
 }
 
 /**
  * Obtener todas las reseñas de un producto específico
  */
 export const getReviewsByProduct = async (productId: number): Promise<Review[]> => {
-    const response = await api.get<Review[]>(`/reviews?product_id=${productId}`);
+    const response = await api.get<Review[]>(`/reviews/by_product/${productId}`);
     return response.data;
 };
 
