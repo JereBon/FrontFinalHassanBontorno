@@ -51,3 +51,18 @@ export const createProduct = async (product: Omit<Product, 'id_key'>): Promise<P
   const response = await api.post<Product>('/products', product);
   return response.data;
 };
+
+/**
+ * Actualizar producto existente (Admin)
+ */
+export const updateProduct = async (id: number, data: Partial<Product>): Promise<Product> => {
+  const response = await api.put<Product>(`/products/${id}`, data);
+  return response.data;
+};
+
+/**
+ * Eliminar producto (Admin)
+ */
+export const deleteProduct = async (id: number): Promise<void> => {
+  await api.delete(`/products/${id}`);
+};

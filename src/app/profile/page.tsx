@@ -1,104 +1,111 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useAuth } from '@/context/AuthContext';
 import { useRouter } from 'next/navigation';
-import { useAuth } from '../../context/AuthContext';
-import { getClientById } from '../../services/clientService';
-import { Client, Order, Status, DeliveryMethod } from '../../types';
+import { useEffect } from 'react';
+import Link from 'next/link';
 
 export default function ProfilePage() {
-    const { user, isAuthenticated, logout } = useAuth();
+    const { user, logout } = useAuth();
     const router = useRouter();
-    const [clientData, setClientData] = useState<Client | null>(null);
-    const [loading, setLoading] = useState(true);
 
     useEffect(() => {
-        if (!isAuthenticated) {
-            if (typeof window !== 'undefined') router.push('/login');
-            return;
-        }
-
-        const fetchProfile = async () => {
-            try {
-                if (user?.id_key) {
-                    const data = await getClientById(user.id_key);
-                    setClientData(data);
-                }
-            } catch (error) {
-                console.error("Failed to fetch profile", error);
-            } finally {
-                setLoading(false);
+        // Solo redirigir si ya terminó de cargar y el usuario no existe
+        if (!user && typeof window !== 'undefined') {
+            const hasToken = localStorage.getItem('token');
+            if (!hasToken) {
+                router.push('/login');
             }
-        };
+        }
+    }, [user, router]);
 
-        fetchProfile();
-    }, [isAuthenticated, user, router]);
+    if (!user) {
+        return null;
+    }
 
-    if (!isAuthenticated || loading) return <div className="text-center py-20 uppercase tracking-widest text-sm text-gray-500">Cargando perfil...</div>;
+    const handleLogout = () => {
+        logout();
+        router.push('/');
+    };
 
     return (
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-            <div className="flex justify-between items-center mb-12 border-b border-gray-200 pb-4">
-                <h1 className="text-3xl font-bold uppercase tracking-tight text-gray-900">Mi Cuenta</h1>
-                <button onClick={logout} className="text-sm font-bold uppercase tracking-wide text-red-600 hover:text-red-800">
-                    Cerrar Sesión
-                </button>
-            </div>
-
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-12">
-                {/* User Info */}
-                <div className="md:col-span-1">
-                    <h2 className="text-lg font-bold uppercase tracking-wide mb-6">Información Personal</h2>
-                    <div className="bg-gray-50 p-6 space-y-4">
-                        <div>
-                            <p className="text-xs text-gray-500 uppercase">Nombre</p>
-                            <p className="font-medium">{user?.name} {user?.lastname}</p>
-                        </div>
-                        <div>
-                            <p className="text-xs text-gray-500 uppercase">Email</p>
-                            <p className="font-medium">{user?.email}</p>
-                        </div>
-                        {clientData?.telephone && (
-                            <div>
-                                <p className="text-xs text-gray-500 uppercase">Teléfono</p>
-                                <p className="font-medium">{clientData.telephone}</p>
-                            </div>
-                        )}
-                    </div>
+        <div className="min-h-screen pt-24 pb-12">
+            <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                {/* Header */}
+                <div className="mb-8">
+                    <h1 className="text-3xl font-bold auto-text mb-3">Mi Cuenta</h1>
+                    <p className="text-lg text-gray-600 dark:text-gray-400 font-light">
+                        ¡Hola, <span className="font-medium auto-text">{user.name || user.email}</span>! 👋 Gestiona tu perfil y pedidos.
+                    </p>
                 </div>
 
-                {/* Order History */}
-                <div className="md:col-span-2">
-                    <h2 className="text-lg font-bold uppercase tracking-wide mb-6">Historial de Pedidos</h2>
-                    {!clientData?.orders || clientData.orders.length === 0 ? (
-                        <p className="text-gray-500 italic">No has realizado pedidos aún.</p>
-                    ) : (
-                        <div className="space-y-4">
-                            {clientData.orders.map((order) => (
-                                <div key={order.id_key} className="border border-gray-200 p-6 flex flex-col sm:flex-row justify-between items-start sm:items-center bg-white hover:bg-gray-50 transition-colors">
-                                    <div>
-                                        <p className="text-sm font-bold uppercase mb-1">Pedido #{order.id_key}</p>
-                                        <p className="text-xs text-gray-500 mb-1">{new Date(order.date).toLocaleDateString()}</p>
-                                        <span className={`inline-block px-2 py-1 text-xs font-bold uppercase tracking-widest ${order.status === Status.DELIVERED ? 'bg-green-100 text-green-800' :
-                                                order.status === Status.CANCELED ? 'bg-red-100 text-red-800' :
-                                                    'bg-yellow-100 text-yellow-800'
-                                            }`}>
-                                            {order.status === Status.PENDING ? 'Pendiente' :
-                                                order.status === Status.IN_PROGRESS ? 'En Progreso' :
-                                                    order.status === Status.DELIVERED ? 'Entregado' : 'Cancelado'}
-                                        </span>
-                                    </div>
-                                    <div className="mt-4 sm:mt-0 text-right">
-                                        <p className="text-lg font-bold">${order.total.toFixed(2)}</p>
-                                        <p className="text-xs text-gray-500 uppercase">
-                                            {order.delivery_method === DeliveryMethod.HOME_DELIVERY ? 'Envío a Domicilio' :
-                                                order.delivery_method === DeliveryMethod.DRIVE_THRU ? 'Drive Thru' : 'Retiro en Tienda'}
-                                        </p>
-                                    </div>
-                                </div>
-                            ))}
+                {/* Card Grid - 3 main sections */}
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+
+                    {/* Mis Datos Card */}
+                    <Link href="/profile/edit" className="soft-card p-6 hover:shadow-lg transition-all group hover:bg-[#d4f238] hover:text-black hover:border-[#d4f238]">
+                        <div className="flex items-center justify-between mb-4">
+                            <div className="w-12 h-12 rounded-full flex items-center justify-center border transition-colors duration-200 navbar-btn border-gray-100 dark:border-gray-800 group-hover:bg-[#d4f238] group-hover:text-black group-hover:border-[#d4f238]">
+                                <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
+                                </svg>
+                            </div>
+                            <svg className="w-5 h-5 text-gray-400 group-hover:text-black transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                            </svg>
                         </div>
-                    )}
+                        <h3 className="text-lg font-bold auto-text group-hover:text-black mb-2">Mis Datos</h3>
+                        <p className="text-sm text-gray-500 dark:text-gray-400 group-hover:text-black/70">
+                            Edita tu información personal
+                        </p>
+                    </Link>
+
+                    {/* Mis Pedidos Card */}
+                    <Link href="/profile/orders" className="soft-card p-6 hover:shadow-lg transition-all group hover:bg-[#d4f238] hover:text-black hover:border-[#d4f238]">
+                        <div className="flex items-center justify-between mb-4">
+                            <div className="w-12 h-12 rounded-full flex items-center justify-center border transition-colors duration-200 navbar-btn border-gray-100 dark:border-gray-800 group-hover:bg-[#d4f238] group-hover:text-black group-hover:border-[#d4f238]">
+                                <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z" />
+                                </svg>
+                            </div>
+                            <svg className="w-5 h-5 text-gray-400 group-hover:text-black transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                            </svg>
+                        </div>
+                        <h3 className="text-lg font-bold auto-text group-hover:text-black mb-2">Mis Pedidos</h3>
+                        <p className="text-sm text-gray-500 dark:text-gray-400 group-hover:text-black/70">
+                            Historial de compras y estado
+                        </p>
+                    </Link>
+
+                    {/* Mis Direcciones Card */}
+                    <Link href="/profile/addresses" className="soft-card p-6 hover:shadow-lg transition-all group hover:bg-[#d4f238] hover:text-black hover:border-[#d4f238]">
+                        <div className="flex items-center justify-between mb-4">
+                            <div className="w-12 h-12 rounded-full flex items-center justify-center border transition-colors duration-200 navbar-btn border-gray-100 dark:border-gray-800 group-hover:bg-[#d4f238] group-hover:text-black group-hover:border-[#d4f238]">
+                                <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
+                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
+                                </svg>
+                            </div>
+                            <svg className="w-5 h-5 text-gray-400 group-hover:text-black transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                            </svg>
+                        </div>
+                        <h3 className="text-lg font-bold auto-text group-hover:text-black mb-2">Mis Direcciones</h3>
+                        <p className="text-sm text-gray-500 dark:text-gray-400 group-hover:text-black/70">
+                            Gestiona tus direcciones de envío
+                        </p>
+                    </Link>
+                </div>
+
+                {/* Logout Button */}
+                <div className="flex justify-center">
+                    <button
+                        onClick={handleLogout}
+                        className="px-6 py-3 bg-[var(--card)] border border-gray-200 dark:border-gray-800 hover:bg-red-600 hover:border-red-600 hover:text-white text-[var(--foreground)] rounded-xl transition-all font-medium shadow-sm"
+                    >
+                        Cerrar Sesión
+                    </button>
                 </div>
             </div>
         </div>

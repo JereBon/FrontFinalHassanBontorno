@@ -38,12 +38,36 @@ const nextConfig: NextConfig = {
         destination: `${backendUrl}/orders/`,
       },
       {
+        source: '/api/addresses/',
+        destination: `${backendUrl}/addresses/`,
+      },
+      {
+        source: '/api/addresses',
+        destination: `${backendUrl}/addresses/`,
+      },
+      {
         source: '/api/categories/',
         destination: `${backendUrl}/categories/`,
       },
       {
         source: '/api/categories',
         destination: `${backendUrl}/categories/`,
+      },
+      {
+        source: '/api/bills/',
+        destination: `${backendUrl}/bills/`,
+      },
+      {
+        source: '/api/bills',
+        destination: `${backendUrl}/bills/`,
+      },
+      {
+        source: '/api/order_details/',
+        destination: `${backendUrl}/order_details/`,
+      },
+      {
+        source: '/api/order_details',
+        destination: `${backendUrl}/order_details/`,
       },
       {
         source: '/api/auth/:path*',

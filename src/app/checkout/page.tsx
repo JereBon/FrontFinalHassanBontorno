@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { useAuth } from '../../context/AuthContext';
 import { useCart } from '../../context/CartContext';
@@ -21,13 +21,25 @@ export default function CheckoutPage() {
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState('');
 
-    if (typeof window !== 'undefined' && !isAuthenticated) {
-        router.push('/login?redirect=/checkout');
-        return null;
-    }
+    // Redirect logic in useEffect to avoid "update while rendering" error
+    useEffect(() => {
+        // Wait for auth to load before deciding to redirect
+        // we can assume if isLoading is false, isAuthenticated is accurate
+        if (!isAuthenticated) {
+            // Only redirect if we effectively know user is not authenticated (and presumably loading is done or we don't care)
+            // But actually, useAuth usually provides isLoading. Let's check if we can assume !isAuthenticated means "definitely not logged in".
+            // The original code checked `!isAuthenticated` directly.
+            // Best practice: check loading state. But `useAuth` here exposes `user` and `isAuthenticated`. 
+            // Let's assume strict equality: if not authenticated, go to login.
+            // However, `cart.length === 0` is the main culprit here after purchase.
+            router.push('/login?redirect=/checkout');
+        } else if (cart.length === 0) {
+            router.push('/cart');
+        }
+    }, [isAuthenticated, cart.length, router]);
 
-    if (typeof window !== 'undefined' && cart.length === 0) {
-        router.push('/cart');
+    // Prevent rendering while checking/redirecting
+    if (!isAuthenticated || cart.length === 0) {
         return null;
     }
 

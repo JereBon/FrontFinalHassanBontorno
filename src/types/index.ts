@@ -30,7 +30,10 @@ export interface Address extends BaseEntity {
     street: string;
     number: string;
     city: string;
+    state?: string;
+    zip_code?: string;
     params?: string;
+    client_id: number;
 }
 
 export enum DeliveryMethod {
@@ -70,4 +73,29 @@ export interface Client extends BaseEntity {
     telephone?: string;
     orders?: Order[];
     addresses?: Address[];
+}
+
+export interface Review extends BaseEntity {
+    rating: number; // 1-5 stars
+    comment: string;
+    product_id: number;
+    client_id: number;
+    product?: Product;
+    client?: Client;
+    created_at?: string;
+}
+
+export enum PaymentType {
+    CASH = 1,
+    CREDIT_CARD = 2,
+    DEBIT_CARD = 3,
+    TRANSFER = 4,
+}
+
+export interface Bill extends BaseEntity {
+    bill_number: string;
+    date: string;
+    total: number;
+    payment_type: PaymentType;
+    client_id: number;
 }
