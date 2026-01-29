@@ -1,6 +1,7 @@
 'use client';
 
 import Link from 'next/link';
+import { useRouter } from 'next/navigation';
 import { useAuth } from '../context/AuthContext';
 import { useTheme } from '../context/ThemeContext';
 import { useState } from 'react';
@@ -9,6 +10,14 @@ export default function Navbar() {
   const { user, logout } = useAuth();
   const { resolvedTheme, setTheme } = useTheme();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [searchTerm, setSearchTerm] = useState('');
+  const router = useRouter();
+
+  const handleSearch = () => {
+    if (searchTerm.trim()) {
+      router.push(`/shop?search=${encodeURIComponent(searchTerm)}`);
+    }
+  };
 
   return (
     <nav className="fixed top-4 left-0 right-0 z-50 mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
@@ -24,14 +33,20 @@ export default function Navbar() {
           </Link>
         </div>
 
-        {/* Search Bar (Fake for Design) */}
+        {/* Search Bar */}
         <div className="hidden md:flex flex-1 max-w-md mx-8 relative">
           <input
             type="text"
-            placeholder="Search products..."
+            placeholder="Buscar productos..."
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)}
+            onKeyDown={(e) => e.key === 'Enter' && handleSearch()}
             className="w-full bg-gray-100 rounded-full py-2 px-5 text-sm outline-none focus:ring-2 focus:ring-[#d4f238] transition-all text-gray-800 placeholder-gray-500"
           />
-          <button className="absolute right-1 top-1 bg-black text-white p-1.5 rounded-full hover:bg-gray-800 transition-colors">
+          <button
+            onClick={handleSearch}
+            className="absolute right-1 top-1 bg-black text-white p-1.5 rounded-full hover:bg-gray-800 transition-colors"
+          >
             <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
             </svg>
@@ -64,6 +79,12 @@ export default function Navbar() {
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z" />
             </svg>
           </button>
+
+          {user && user.email === 'admin@gmail.com' && (
+            <Link href="/admin" className="px-4 py-2 navbar-btn rounded-full font-bold text-sm border-2 border-[var(--primary)] text-black bg-[var(--primary)] hover:opacity-90">
+              Panel Admin
+            </Link>
+          )}
 
           {user ? (
             <div className="flex items-center gap-3">

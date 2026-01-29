@@ -3,28 +3,31 @@
 import { useState } from 'react';
 import { useAuth } from '@/context/AuthContext';
 import Link from 'next/link';
+import { useRouter } from 'next/navigation';
 
 export default function LoginPage() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
   const { login, isLoading } = useAuth();
+  const router = useRouter();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setError('');
     try {
       await login(email, password);
+      router.push('/profile');
     } catch (err) {
       setError('Credenciales inválidas. Por favor intenta nuevamente.');
     }
   };
 
   return (
-    <div className="min-h-[80vh] flex items-center justify-center bg-white px-4">
-      <div className="w-full max-w-md space-y-8">
-        <div className="text-center">
-          <h2 className="mt-6 text-3xl font-bold tracking-tight text-gray-900 uppercase">
+    <div className="min-h-screen pt-28 pb-12 flex items-center justify-center px-4 transition-colors duration-300">
+      <div className="w-full max-w-md soft-card p-8 animate-in fade-in zoom-in duration-300">
+        <div className="text-center mb-8">
+          <h2 className="text-3xl font-bold tracking-tight auto-text uppercase">
             Iniciar Sesión
           </h2>
           <p className="mt-2 text-sm text-gray-600">

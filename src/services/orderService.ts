@@ -69,7 +69,8 @@ export const getOrderDetailsByOrder = async (orderId: number): Promise<OrderDeta
  * Obtener todas las órdenes de un cliente
  */
 export const getOrdersByClient = async (clientId: number): Promise<Order[]> => {
-    const response = await api.get<Order[]>(`/orders?client_id=${clientId}`);
+    // UPDATED: Use secure endpoint
+    const response = await api.get<Order[]>(`/orders/by_client/${clientId}`);
     return response.data;
 };
 

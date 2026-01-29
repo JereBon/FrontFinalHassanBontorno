@@ -6,7 +6,7 @@ export const getProducts = async (): Promise<Product[]> => {
   return response.data;
 };
 
-export const getPlaceholderImage = (categoryId: number, index: number): string => {
+export const getPlaceholderImage = (categoryId: number | null | undefined, index: number): string => {
   // Imágenes estáticas y confiables de Unsplash para evitar errores de red con source.unsplash.com
   const collections: Record<number, string[]> = {
     1: [ // Prendas Superiores (T-Shirts, Hoodies)
@@ -37,7 +37,8 @@ export const getPlaceholderImage = (categoryId: number, index: number): string =
     ]
   };
 
-  const images = collections[categoryId] || collections[1];
+  const catId = categoryId || 1; // Default to 1 if null
+  const images = collections[catId] || collections[1];
   // Usar el ID como índice determinístico
   return images[index % images.length];
 };

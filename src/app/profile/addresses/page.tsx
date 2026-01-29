@@ -92,7 +92,7 @@ export default function AddressesPage() {
     }
 
     return (
-        <div className="min-h-screen pt-24 pb-12">
+        <div className="min-h-screen pt-28 pb-12">
             <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
                 <div className="mb-6">
                     <Link href="/profile" className="text-sm text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-200 flex items-center gap-1">
@@ -127,7 +127,7 @@ export default function AddressesPage() {
                                         type="text"
                                         value={formData.street}
                                         onChange={(e) => setFormData({ ...formData, street: e.target.value })}
-                                        className="w-full px-4 py-2 bg-[var(--card)] border border-gray-200 dark:border-gray-700 rounded-lg focus:ring-2 focus:ring-[#d4f238] focus:border-transparent text-[var(--foreground)]"
+                                        className="w-full theme-input rounded-lg p-3 outline-none focus:ring-2 focus:ring-[var(--primary)] transition-all"
                                         required
                                     />
                                 </div>
@@ -137,7 +137,7 @@ export default function AddressesPage() {
                                         type="text"
                                         value={formData.number}
                                         onChange={(e) => setFormData({ ...formData, number: e.target.value })}
-                                        className="w-full px-4 py-2 bg-[var(--card)] border border-gray-200 dark:border-gray-700 rounded-lg focus:ring-2 focus:ring-[#d4f238] focus:border-transparent text-[var(--foreground)]"
+                                        className="w-full theme-input rounded-lg p-3 outline-none focus:ring-2 focus:ring-[var(--primary)] transition-all"
                                         required
                                     />
                                 </div>
@@ -149,7 +149,7 @@ export default function AddressesPage() {
                                     type="text"
                                     value={formData.city}
                                     onChange={(e) => setFormData({ ...formData, city: e.target.value })}
-                                    className="w-full px-4 py-2 bg-[var(--card)] border border-gray-200 dark:border-gray-700 rounded-lg focus:ring-2 focus:ring-[#d4f238] focus:border-transparent text-[var(--foreground)]"
+                                    className="w-full theme-input rounded-lg p-3 outline-none focus:ring-2 focus:ring-[var(--primary)] transition-all"
                                     required
                                 />
                             </div>
@@ -162,7 +162,7 @@ export default function AddressesPage() {
                                         name="state"
                                         value={formData.state}
                                         onChange={(e) => setFormData({ ...formData, state: e.target.value })}
-                                        className="w-full px-4 py-2 bg-[var(--card)] border border-gray-200 dark:border-gray-700 rounded-lg focus:ring-2 focus:ring-[#d4f238] focus:border-transparent text-[var(--foreground)]"
+                                        className="w-full theme-input rounded-lg p-3 outline-none focus:ring-2 focus:ring-[var(--primary)] transition-all"
                                         required
                                     />
                                 </div>
@@ -173,7 +173,7 @@ export default function AddressesPage() {
                                         name="zip_code"
                                         value={formData.zip_code}
                                         onChange={(e) => setFormData({ ...formData, zip_code: e.target.value })}
-                                        className="w-full px-4 py-2 bg-[var(--card)] border border-gray-200 dark:border-gray-700 rounded-lg focus:ring-2 focus:ring-[#d4f238] focus:border-transparent text-[var(--foreground)]"
+                                        className="w-full theme-input rounded-lg p-3 outline-none focus:ring-2 focus:ring-[var(--primary)] transition-all"
                                         required
                                     />
                                 </div>

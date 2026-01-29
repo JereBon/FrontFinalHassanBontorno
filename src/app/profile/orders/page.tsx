@@ -59,11 +59,11 @@ export default function OrdersPage() {
 
     const getStatusColor = (status: number) => {
         switch (status) {
-            case Status.PENDING: return 'bg-yellow-100 text-yellow-800 dark:bg-yellow-900/30 dark:text-yellow-300';
-            case Status.IN_PROGRESS: return 'bg-blue-100 text-blue-800 dark:bg-blue-900/30 dark:text-blue-300';
-            case Status.DELIVERED: return 'bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-300';
-            case Status.CANCELED: return 'bg-red-100 text-red-800 dark:bg-red-900/30 dark:text-red-300';
-            default: return 'bg-gray-100 text-gray-800 dark:bg-gray-900/30 dark:text-gray-300';
+            case Status.PENDING: return 'bg-yellow-100 text-yellow-800 border border-yellow-200 dark:bg-yellow-900/30 dark:text-yellow-300 dark:border-yellow-800';
+            case Status.IN_PROGRESS: return 'bg-blue-100 text-blue-800 border border-blue-200 dark:bg-blue-900/30 dark:text-blue-300 dark:border-blue-800';
+            case Status.DELIVERED: return 'bg-green-100 text-green-800 border border-green-200 dark:bg-green-900/30 dark:text-green-300 dark:border-green-800';
+            case Status.CANCELED: return 'bg-red-100 text-red-800 border border-red-200 dark:bg-red-900/30 dark:text-red-300 dark:border-red-800';
+            default: return 'bg-gray-100 text-gray-800 border border-gray-200 dark:bg-gray-900/30 dark:text-gray-300 dark:border-gray-800';
         }
     };
 
@@ -72,7 +72,7 @@ export default function OrdersPage() {
     }
 
     return (
-        <div className="min-h-screen pt-24 pb-12">
+        <div className="min-h-screen pt-28 pb-12">
             <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
                 <div className="mb-6">
                     <Link href="/profile" className="text-sm text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-200 flex items-center gap-1">
@@ -110,7 +110,7 @@ export default function OrdersPage() {
                                             })}
                                         </p>
                                     </div>
-                                    <span className={`px-3 py-1 rounded-full text-xs font-medium ${getStatusColor(order.status)}`}>
+                                    <span className={`px-4 py-1.5 rounded-full text-xs font-bold uppercase tracking-wider ${getStatusColor(order.status)}`}>
                                         {getStatusText(order.status)}
                                     </span>
                                 </div>
@@ -122,14 +122,14 @@ export default function OrdersPage() {
                                     <div className="flex gap-3">
                                         <Link
                                             href={`/profile/orders/${order.id_key}`}
-                                            className="px-4 py-2 bg-gray-100 dark:bg-gray-800 hover:bg-gray-200 dark:hover:bg-gray-700 rounded-lg transition-colors auto-text text-sm font-medium"
+                                            className="px-5 py-2 bg-black text-white dark:bg-white dark:text-black hover:opacity-80 rounded-lg transition-all text-sm font-bold uppercase tracking-wide"
                                         >
                                             Ver Detalle
                                         </Link>
                                         {order.status === Status.PENDING && (
                                             <button
                                                 onClick={() => handleCancelOrder(order)}
-                                                className="px-4 py-2 bg-red-50 dark:bg-red-900/20 text-red-600 dark:text-red-400 hover:bg-red-100 dark:hover:bg-red-900/30 rounded-lg transition-colors text-sm font-medium"
+                                                className="px-4 py-2 border border-red-200 bg-red-50 text-red-600 hover:bg-red-100 hover:text-red-700 dark:bg-red-900/20 dark:border-red-800 dark:text-red-400 rounded-lg transition-all text-sm font-bold uppercase tracking-wide"
                                             >
                                                 Cancelar
                                             </button>

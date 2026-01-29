@@ -22,7 +22,8 @@ export interface Product extends BaseEntity {
     name: string;
     price: number;
     stock: number;
-    category_id: number;
+    image_url?: string;
+    category_id: number | null;
     category?: Category;
 }
 

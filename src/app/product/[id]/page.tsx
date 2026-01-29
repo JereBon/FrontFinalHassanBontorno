@@ -43,8 +43,8 @@ export default function ProductDetailPage() {
     if (loading) return <div className="text-center py-20 uppercase tracking-widest text-sm text-gray-500 pt-32">Cargando...</div>;
     if (!product) return <div className="text-center py-20 uppercase tracking-widest text-sm text-gray-500 pt-32">Producto no encontrado</div>;
 
-    // Use shared image logic
-    const imageSrc = getPlaceholderImage(product.category_id, product.id_key);
+    // Use shared image logic (Custom Image > Placeholder)
+    const imageSrc = product.image_url || getPlaceholderImage(product.category_id, product.id_key);
 
     return (
         <div className="min-h-screen flex items-center pt-24 pb-12">

@@ -7,8 +7,8 @@ interface ProductCardProps {
 }
 
 export default function ProductCard({ product }: ProductCardProps) {
-    // Usamos el ID del producto como índice para variar las imágenes dentro de la misma categoría
-    const imageSrc = getPlaceholderImage(product.category_id, product.id_key);
+    // Si hay una imagen personalizada, úsala. Si no, usa el placeholder.
+    const imageSrc = product.image_url || getPlaceholderImage(product.category_id, product.id_key);
 
     return (
         <Link href={`/product/${product.id_key}`} className="group block">
